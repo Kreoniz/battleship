@@ -73,7 +73,6 @@ export class Gameboard {
         } else if (cell.status === 'empty') {
           line.push('0');
         }
-
       }
       console.log(line.join(' '));
     }
