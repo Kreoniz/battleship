@@ -1,4 +1,4 @@
-import { Gameboard } from '../gameboard';
+import { Gameboard } from '../src/scripts/gameboard.js';
 
 it('should place the ship', () => {
   const gameboard = new Gameboard();

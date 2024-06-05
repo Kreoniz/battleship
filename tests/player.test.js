@@ -1,4 +1,4 @@
-import { Player } from '../player';
+import { Player } from '../src/scripts/player';
 
 test('if gameboard objects of each player are different', () => {
   const player1 = new Player();

@@ -1,4 +1,4 @@
-import { Ship } from '../ship';
+import { Ship } from '../src/scripts/ship';
 
 it('should be of a given length', () => {
   const ship = new Ship(3);
