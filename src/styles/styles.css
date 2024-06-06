@@ -1,17 +1,17 @@
 .row {
-    display: flex;
+  display: flex;
 }
 
 .cell {
-    margin: 2px;
-    height: 30px;
-    width: 30px;
-    border: 2px solid black;
+  margin: 2px;
+  height: 30px;
+  width: 30px;
+  border: 2px solid black;
 
-    transition: 0.3s;
+  transition: 0.3s;
 }
 
 .cell:hover {
-    cursor: pointer;
-    background-color: salmon;
+  cursor: pointer;
+  background-color: salmon;
 }
