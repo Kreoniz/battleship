@@ -15,7 +15,7 @@ body {
   transition: 0.3s;
 }
 
-.enemy:hover {
+.shootable:hover {
   cursor: pointer;
   background-color: salmon;
 }

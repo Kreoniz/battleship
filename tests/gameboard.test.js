@@ -2,7 +2,11 @@ import { Gameboard } from '../src/scripts/gameboard.js';
 
 it('should place the ship', () => {
   const gameboard = new Gameboard();
-  const coords = [{ x: 1, y: 2 }, { x: 1, y: 3 }, { x: 1, y: 4 }];
+  const coords = [
+    { x: 1, y: 2 },
+    { x: 1, y: 3 },
+    { x: 1, y: 4 },
+  ];
 
   gameboard.placeShip(coords);
 
@@ -44,7 +48,11 @@ it('should have empty cells when initialized', () => {
 
 it('should handle attacking the cell properly', () => {
   const gameboard = new Gameboard();
-  const coords = [{ x: 1, y: 2 }, { x: 1, y: 3 }, { x: 1, y: 4 }];
+  const coords = [
+    { x: 1, y: 2 },
+    { x: 1, y: 3 },
+    { x: 1, y: 4 },
+  ];
 
   gameboard.placeShip(coords);
 
@@ -54,3 +62,31 @@ it('should handle attacking the cell properly', () => {
   gameboard.receiveAttack(2, 2);
   expect(gameboard.getCell(2, 2).status).toBe('missed');
 });
+
+/*
+it('should correctly return empty cells surrounding the ship', () => {
+  const gameboard = new Gameboard();
+  const coords = [
+    { x: 1, y: 2 },
+    { x: 1, y: 3 },
+    { x: 1, y: 4 },
+  ];
+
+  gameboard.placeShip(coords);
+
+  const adjacentCells = gameboard.getShipAdjacentCells(1, 2);
+
+  expect(adjacentCells).toContain({ x: 0, y: 1 });
+  expect(adjacentCells).toContain({ x: 1, y: 1 });
+  expect(adjacentCells).toContain({ x: 2, y: 1 });
+  expect(adjacentCells).toContain({ x: 2, y: 2 });
+  expect(adjacentCells).toContain({ x: 2, y: 3 });
+  expect(adjacentCells).toContain({ x: 2, y: 4 });
+  expect(adjacentCells).toContain({ x: 2, y: 5 });
+  expect(adjacentCells).toContain({ x: 1, y: 5 });
+  expect(adjacentCells).toContain({ x: 0, y: 5 });
+  expect(adjacentCells).toContain({ x: 0, y: 4 });
+  expect(adjacentCells).toContain({ x: 0, y: 3 });
+  expect(adjacentCells).toContain({ x: 0, y: 2 });
+});
+*/

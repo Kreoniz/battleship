@@ -1,13 +1,8 @@
 import { Player } from './scripts/player.js';
 import './styles/styles.css';
 
-console.log('Hello');
-
 const player = new Player();
 const opponent = new Player();
-
-console.log(player);
-console.log(player.gameboard);
 
 const playerShips = [
   [{ x: 9, y: 0 }],
@@ -50,7 +45,7 @@ for (let i = 0; i < playerShips.length; i += 1) {
 
 const opponentShips = [
   [{ x: 3, y: 0 }],
-  [{ x: 1, y: 5 }],
+  [{ x: 4, y: 4 }],
   [{ x: 2, y: 9 }],
   [{ x: 5, y: 8 }],
   [
@@ -88,8 +83,6 @@ for (let i = 0; i < opponentShips.length; i += 1) {
 }
 
 function renderBoard(root, gameboard, isPlayer) {
-  console.log(root);
-
   for (let i = 0; i < 10; i += 1) {
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('row');
@@ -101,21 +94,41 @@ function renderBoard(root, gameboard, isPlayer) {
       cellDiv.dataset.y = i;
 
       if (!isPlayer) {
-        cellDiv.classList.add('enemy');
+        cellDiv.classList.add('shootable');
 
         cellDiv.addEventListener('click', () => {
+          if (!cellDiv.classList.contains('shootable')) {
+            return;
+          }
+
           const x = cellDiv.dataset.x;
           const y = cellDiv.dataset.y;
-          console.log(x, y);
-          const cell = gameboard.getCell(x, y);
-          console.log(cell);
 
-          if (cell.status === 'occupied') {
-            gameboard.receiveAttack(x, y);
+          const result = gameboard.receiveAttack(x, y);
+          cellDiv.classList.remove('shootable');
+
+          if (result === 'hit') {
             cellDiv.classList.add('occupied');
             cellDiv.classList.add('hit');
-          } else if (cell.status === 'empty') {
-            gameboard.receiveAttack(x, y);
+          } else if (result === 'destroyed') {
+            const adjacentCells = gameboard.getShipAdjacentCells(x, y);
+
+            for (let i = 0; i < adjacentCells.length; i += 1) {
+              const adjacentX = adjacentCells[i].x;
+              const adjacentY = adjacentCells[i].y;
+
+              const adjacentCellDiv = root.querySelector(
+                `[data-x="${adjacentX}"][data-y="${adjacentY}"]`,
+              );
+
+              gameboard.receiveAttack(adjacentX, adjacentY);
+              adjacentCellDiv.classList.add('missed');
+              adjacentCellDiv.classList.remove('shootable');
+            }
+
+            cellDiv.classList.add('occupied');
+            cellDiv.classList.add('hit');
+          } else if (result === 'missed') {
             cellDiv.classList.add('missed');
           }
         });

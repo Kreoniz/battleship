@@ -51,8 +51,17 @@ export class Gameboard {
     if (cell.ship || cell.status === 'occupied') {
       cell.ship.hit();
       cell.status = 'hit';
-    } else if (cell.status === 'empty') {
+
+      if (cell.ship.isSunk()) {
+        return 'destroyed';
+      } else {
+        return 'hit';
+      }
+    }
+
+    if (cell.status === 'empty') {
       cell.status = 'missed';
+      return 'missed';
     }
   }
 
@@ -82,6 +91,62 @@ export class Gameboard {
     const cell = this.#coordinates[y][x];
 
     return cell;
+  }
+
+  getShipAdjacentCells(x, y) {
+    const { w, h } = this.getBoardDimensions();
+
+    const cells = [];
+    const queue = [{ x, y }];
+    const visited = [];
+
+    const deltas = [
+      [-1, -1],
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 1],
+      [0, 1],
+      [-1, 1],
+      [-1, 0],
+    ];
+
+    while (queue.length > 0) {
+      const currentCoords = queue.shift();
+      visited.push(currentCoords);
+
+      const currentX = +currentCoords.x;
+      const currentY = +currentCoords.y;
+
+      for (let i = 0; i < deltas.length; i += 1) {
+        const changedX = currentX + deltas[i][0];
+        const changedY = currentY + deltas[i][1];
+
+        if (
+          changedX >= 0 &&
+          changedX <= w - 1 &&
+          changedY >= 0 &&
+          changedY <= h - 1
+        ) {
+          const changedCoords = { x: changedX, y: changedY };
+
+          if (
+            visited.filter((c) => +c.x === changedX && +c.y === changedY)
+              .length !== 0
+          ) {
+            continue;
+          }
+
+          if (this.getCell(changedX, changedY).status === 'hit') {
+            queue.push(changedCoords);
+          } else {
+            cells.push(changedCoords);
+          }
+        }
+      }
+    }
+
+    return cells;
   }
 
   getBoardDimensions() {
