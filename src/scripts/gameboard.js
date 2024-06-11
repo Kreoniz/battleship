@@ -137,7 +137,9 @@ export class Gameboard {
             continue;
           }
 
-          if (this.getCell(changedX, changedY).status === 'hit') {
+          const status = this.getCell(changedX, changedY).status;
+
+          if (status === 'hit' || status === 'occupied') {
             queue.push(changedCoords);
           } else {
             cells.push(changedCoords);

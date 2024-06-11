@@ -63,8 +63,7 @@ it('should handle attacking the cell properly', () => {
   expect(gameboard.getCell(2, 2).status).toBe('missed');
 });
 
-/*
-it('should correctly return empty cells surrounding the ship', () => {
+it('should correctly return empty cells surrounding the destroyed ship', () => {
   const gameboard = new Gameboard();
   const coords = [
     { x: 1, y: 2 },
@@ -76,17 +75,16 @@ it('should correctly return empty cells surrounding the ship', () => {
 
   const adjacentCells = gameboard.getShipAdjacentCells(1, 2);
 
-  expect(adjacentCells).toContain({ x: 0, y: 1 });
-  expect(adjacentCells).toContain({ x: 1, y: 1 });
-  expect(adjacentCells).toContain({ x: 2, y: 1 });
-  expect(adjacentCells).toContain({ x: 2, y: 2 });
-  expect(adjacentCells).toContain({ x: 2, y: 3 });
-  expect(adjacentCells).toContain({ x: 2, y: 4 });
-  expect(adjacentCells).toContain({ x: 2, y: 5 });
-  expect(adjacentCells).toContain({ x: 1, y: 5 });
-  expect(adjacentCells).toContain({ x: 0, y: 5 });
-  expect(adjacentCells).toContain({ x: 0, y: 4 });
-  expect(adjacentCells).toContain({ x: 0, y: 3 });
-  expect(adjacentCells).toContain({ x: 0, y: 2 });
+  expect(adjacentCells).toContainEqual({ x: 0, y: 1 });
+  expect(adjacentCells).toContainEqual({ x: 1, y: 1 });
+  expect(adjacentCells).toContainEqual({ x: 2, y: 1 });
+  expect(adjacentCells).toContainEqual({ x: 2, y: 2 });
+  expect(adjacentCells).toContainEqual({ x: 2, y: 3 });
+  expect(adjacentCells).toContainEqual({ x: 2, y: 4 });
+  expect(adjacentCells).toContainEqual({ x: 2, y: 5 });
+  expect(adjacentCells).toContainEqual({ x: 1, y: 5 });
+  expect(adjacentCells).toContainEqual({ x: 0, y: 5 });
+  expect(adjacentCells).toContainEqual({ x: 0, y: 4 });
+  expect(adjacentCells).toContainEqual({ x: 0, y: 3 });
+  expect(adjacentCells).toContainEqual({ x: 0, y: 2 });
 });
-*/
