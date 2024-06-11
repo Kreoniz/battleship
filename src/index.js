@@ -1,4 +1,5 @@
 import { Player } from './scripts/player.js';
+import { renderPlayerBoard, renderOpponentBoard } from './scripts/render.js';
 import './styles/styles.css';
 
 const player = new Player();
@@ -83,6 +84,8 @@ for (let i = 0; i < opponentShips.length; i += 1) {
 }
 
 function renderBoard(root, gameboard, isPlayer) {
+  root.innerHTML = '';
+
   for (let i = 0; i < 10; i += 1) {
     const rowDiv = document.createElement('div');
     rowDiv.classList.add('row');
@@ -105,12 +108,15 @@ function renderBoard(root, gameboard, isPlayer) {
           const y = cellDiv.dataset.y;
 
           const result = gameboard.receiveAttack(x, y);
+          const cell = gameboard.getCell(x, y);
+          console.log(cell);
+
           cellDiv.classList.remove('shootable');
 
-          if (result === 'hit') {
+          if (cell.status === 'hit') {
             cellDiv.classList.add('occupied');
             cellDiv.classList.add('hit');
-          } else if (result === 'destroyed') {
+          } else if (cell.status === 'destroyed') {
             const adjacentCells = gameboard.getShipAdjacentCells(x, y);
 
             for (let i = 0; i < adjacentCells.length; i += 1) {
@@ -131,6 +137,7 @@ function renderBoard(root, gameboard, isPlayer) {
           } else if (result === 'missed') {
             cellDiv.classList.add('missed');
           }
+          renderBoard(root, gameboard, isPlayer);
         });
       }
 
@@ -147,8 +154,13 @@ function renderBoard(root, gameboard, isPlayer) {
   }
 }
 
-renderBoard(document.querySelector('#playerBoard'), player.gameboard, true);
-renderBoard(
+renderPlayerBoard(
+  document.querySelector('#playerBoard'),
+  player.gameboard,
+  false,
+);
+
+renderOpponentBoard(
   document.querySelector('#opponentBoard'),
   opponent.gameboard,
   false,

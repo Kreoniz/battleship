@@ -31,11 +31,12 @@ body {
   font-size: 2rem;
 }
 
-.occupied {
+.ship {
   background-color: grey;
 }
 
 .hit {
+  background-color: grey;
   position: relative;
 }
 
