@@ -1,5 +1,5 @@
 import { Player } from './scripts/player.js';
-import { renderPlayerBoard, renderOpponentBoard } from './scripts/render.js';
+import { BoardRenderer } from './scripts/render.js';
 import './styles/styles.css';
 
 const player = new Player();
@@ -83,85 +83,23 @@ for (let i = 0; i < opponentShips.length; i += 1) {
   opponent.gameboard.placeShip(opponentShips[i]);
 }
 
-function renderBoard(root, gameboard, isPlayer) {
-  root.innerHTML = '';
+// Randomly deside which player moves first
+const PlayerFirstTurn = Boolean(Math.round(Math.random()));
 
-  for (let i = 0; i < 10; i += 1) {
-    const rowDiv = document.createElement('div');
-    rowDiv.classList.add('row');
+const boardRenderer = new BoardRenderer(
+  PlayerFirstTurn,
+  document.querySelector('#playerBoard'),
+  player,
+  document.querySelector('#opponentBoard'),
+  opponent,
+);
 
-    for (let j = 0; j < 10; j += 1) {
-      const cellDiv = document.createElement('div');
-      cellDiv.classList.add('cell');
-      cellDiv.dataset.x = j;
-      cellDiv.dataset.y = i;
+console.log('Is player turn?', boardRenderer.isPlayerTurn);
+boardRenderer.renderPlayerBoard();
+boardRenderer.renderOpponentBoard();
 
-      if (!isPlayer) {
-        cellDiv.classList.add('shootable');
-
-        cellDiv.addEventListener('click', () => {
-          if (!cellDiv.classList.contains('shootable')) {
-            return;
-          }
-
-          const x = cellDiv.dataset.x;
-          const y = cellDiv.dataset.y;
-
-          const result = gameboard.receiveAttack(x, y);
-          const cell = gameboard.getCell(x, y);
-          console.log(cell);
-
-          cellDiv.classList.remove('shootable');
-
-          if (cell.status === 'hit') {
-            cellDiv.classList.add('occupied');
-            cellDiv.classList.add('hit');
-          } else if (cell.status === 'destroyed') {
-            const adjacentCells = gameboard.getShipAdjacentCells(x, y);
-
-            for (let i = 0; i < adjacentCells.length; i += 1) {
-              const adjacentX = adjacentCells[i].x;
-              const adjacentY = adjacentCells[i].y;
-
-              const adjacentCellDiv = root.querySelector(
-                `[data-x="${adjacentX}"][data-y="${adjacentY}"]`,
-              );
-
-              gameboard.receiveAttack(adjacentX, adjacentY);
-              adjacentCellDiv.classList.add('missed');
-              adjacentCellDiv.classList.remove('shootable');
-            }
-
-            cellDiv.classList.add('occupied');
-            cellDiv.classList.add('hit');
-          } else if (result === 'missed') {
-            cellDiv.classList.add('missed');
-          }
-          renderBoard(root, gameboard, isPlayer);
-        });
-      }
-
-      if (isPlayer) {
-        if (gameboard.getCell(j, i).status === 'occupied') {
-          cellDiv.classList.add('occupied');
-        }
-      }
-
-      rowDiv.appendChild(cellDiv);
-    }
-
-    root.appendChild(rowDiv);
-  }
+if (!boardRenderer.isPlayerTurn) {
+  boardRenderer.makeOpponentMove(opponent, player);
 }
 
-renderPlayerBoard(
-  document.querySelector('#playerBoard'),
-  player.gameboard,
-  false,
-);
-
-renderOpponentBoard(
-  document.querySelector('#opponentBoard'),
-  opponent.gameboard,
-  false,
-);
+console.log(player.makeRandomMove());

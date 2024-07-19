@@ -1,79 +1,120 @@
-export function renderPlayerBoard(root, gameboard, isTurn) {
-  root.innerHTML = '';
+export class BoardRenderer {
+  isPlayerTurn;
+  player;
+  opponent;
 
-  for (let i = 0; i < 10; i += 1) {
-    const rowDiv = document.createElement('div');
-    rowDiv.classList.add('row');
-
-    for (let j = 0; j < 10; j += 1) {
-      const cellDiv = document.createElement('div');
-      cellDiv.dataset.x = j;
-      cellDiv.dataset.y = i;
-
-      const cell = gameboard.getCell(j, i);
-      cellDiv.classList.add('cell');
-      if (cell.status === 'occupied') {
-        cellDiv.classList.add('ship');
-      } else {
-        cellDiv.classList.add(cell.status);
-      }
-
-      rowDiv.appendChild(cellDiv);
-    }
-
-    root.appendChild(rowDiv);
+  constructor(isPlayerTurn, playerRoot, player, opponentRoot, opponent) {
+    this.isPlayerTurn = isPlayerTurn;
+    this.player = player;
+    this.playerRoot = playerRoot;
+    this.opponent = opponent;
+    this.opponentRoot = opponentRoot;
   }
-}
 
-export function renderOpponentBoard(root, gameboard, isTurn) {
-  root.innerHTML = '';
+  renderPlayerBoard() {
+    this.playerRoot.innerHTML = '';
 
-  for (let i = 0; i < 10; i += 1) {
-    const rowDiv = document.createElement('div');
-    rowDiv.classList.add('row');
+    for (let i = 0; i < 10; i += 1) {
+      const rowDiv = document.createElement('div');
+      rowDiv.classList.add('row');
 
-    for (let j = 0; j < 10; j += 1) {
-      const cellDiv = document.createElement('div');
-      cellDiv.dataset.x = j;
-      cellDiv.dataset.y = i;
+      for (let j = 0; j < 10; j += 1) {
+        const cellDiv = document.createElement('div');
+        cellDiv.dataset.x = j;
+        cellDiv.dataset.y = i;
 
-      const cell = gameboard.getCell(j, i);
-      cellDiv.classList.add('cell');
-      cellDiv.classList.add(cell.status);
-      if (cell.status !== 'hit' && cell.status !== 'missed') {
-        cellDiv.classList.add('shootable');
-      }
-
-      if (cell.status === 'occupied' || cell.status === 'empty') {
-        cellDiv.addEventListener('click', () => {
-          const x = cellDiv.dataset.x;
-          const y = cellDiv.dataset.y;
+        const cell = this.player.gameboard.getCell(j, i);
+        cellDiv.classList.add('cell');
+        if (cell.status === 'occupied') {
+          cellDiv.classList.add('ship');
+        } else {
           cellDiv.classList.add(cell.status);
+        }
 
-          const attackResult = gameboard.receiveAttack(x, y);
-
-          if (attackResult === 'destroyed') {
-            const adjacentCells = gameboard.getShipAdjacentCells(x, y);
-
-            for (let i = 0; i < adjacentCells.length; i += 1) {
-              const adjacentX = adjacentCells[i].x;
-              const adjacentY = adjacentCells[i].y;
-
-              gameboard.receiveAttack(adjacentX, adjacentY);
-            }
-          }
-
-          if (attackResult === 'missed') {
-            renderOpponentBoard(root, gameboard, !isTurn);
-          } else {
-            renderOpponentBoard(root, gameboard, true);
-          }
-        });
+        rowDiv.appendChild(cellDiv);
       }
 
-      rowDiv.appendChild(cellDiv);
+      this.playerRoot.appendChild(rowDiv);
+    }
+  }
+
+  renderOpponentBoard() {
+    this.opponentRoot.innerHTML = '';
+
+    for (let i = 0; i < 10; i += 1) {
+      const rowDiv = document.createElement('div');
+      rowDiv.classList.add('row');
+
+      for (let j = 0; j < 10; j += 1) {
+        const cellDiv = document.createElement('div');
+        cellDiv.dataset.x = j;
+        cellDiv.dataset.y = i;
+
+        const cell = this.opponent.gameboard.getCell(j, i);
+        cellDiv.classList.add('cell');
+        cellDiv.classList.add(cell.status);
+
+        if (
+          this.isPlayerTurn &&
+          (cell.status === 'occupied' || cell.status === 'empty')
+        ) {
+          if (cell.status !== 'hit' && cell.status !== 'missed') {
+            cellDiv.classList.add('shootable');
+          }
+
+          cellDiv.addEventListener('click', () => {
+            const x = cellDiv.dataset.x;
+            const y = cellDiv.dataset.y;
+            cellDiv.classList.add(cell.status);
+
+            const attackResult = this.opponent.gameboard.receiveAttack(x, y);
+
+            if (attackResult === 'destroyed') {
+              const adjacentCells =
+                this.opponent.gameboard.getShipAdjacentCells(x, y);
+
+              for (let i = 0; i < adjacentCells.length; i += 1) {
+                const adjacentX = adjacentCells[i].x;
+                const adjacentY = adjacentCells[i].y;
+
+                this.opponent.gameboard.receiveAttack(adjacentX, adjacentY);
+              }
+            }
+
+            if (attackResult === 'missed') {
+              this.isPlayerTurn = !this.isPlayerTurn;
+              this.renderOpponentBoard();
+              this.makeOpponentMove(this.opponent, this.player);
+            } else {
+              this.renderOpponentBoard();
+            }
+          });
+        }
+
+        rowDiv.appendChild(cellDiv);
+      }
+
+      this.opponentRoot.appendChild(rowDiv);
+    }
+  }
+
+  renderBoards() {
+    this.renderPlayerBoard();
+    this.renderOpponentBoard();
+  }
+
+  makeOpponentMove(attacker, defender) {
+    const randomMove = attacker.makeRandomMove();
+    const x = randomMove.x;
+    const y = randomMove.y;
+
+    const attackResult = defender.gameboard.receiveAttack(x, y);
+    if (attackResult === 'hit') {
+      this.randomMove(attacker, defender);
+    } else if (attackResult === 'missed') {
+      this.isPlayerTurn = !this.isPlayerTurn;
     }
 
-    root.appendChild(rowDiv);
+    this.renderBoards();
   }
 }
