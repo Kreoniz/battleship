@@ -30,6 +30,10 @@ export class Gameboard {
     }
   }
 
+  checkAllShipsSunk() {
+    return this.#ships.every((ship) => ship.isSunk());
+  }
+
   placeShip(shipCoords) {
     const ship = new Ship(shipCoords.length);
 

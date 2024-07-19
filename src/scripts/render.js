@@ -88,6 +88,12 @@ export class BoardRenderer {
             } else {
               this.renderOpponentBoard();
             }
+
+            if (this.opponent.gameboard.checkAllShipsSunk()) {
+              this.isPlayerTurn = false;
+              document.querySelector('#status').textContent = 'YOU WIN!';
+              this.renderOpponentBoard();
+            }
           });
         }
 
@@ -109,7 +115,6 @@ export class BoardRenderer {
     let y = randomMove.y;
 
     const attackResult = defender.gameboard.receiveAttack(x, y);
-    console.log(attackResult, x, y);
 
     if (attackResult === 'hit') {
       this.makeOpponentMove(attacker, defender);
@@ -126,6 +131,12 @@ export class BoardRenderer {
       this.makeOpponentMove(attacker, defender);
     } else if (attackResult === 'missed') {
       this.isPlayerTurn = !this.isPlayerTurn;
+    }
+
+    if (defender.gameboard.checkAllShipsSunk()) {
+      this.isPlayerTurn = false;
+      document.querySelector('#status').textContent = 'OPPONENT WINS!';
+      this.renderOpponentBoard();
     }
 
     this.renderBoards();
