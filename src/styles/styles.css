@@ -1,5 +1,21 @@
+:root {
+  --background-color: rgb(255, 255, 255);
+  --text-color: grey;
+  --border-color: grey;
+  --ship-color: grey;
+}
+
+.dark {
+  --background-color: rgb(0, 0, 0);
+  --text-color: rgb(255, 255, 255);
+  --border-color: rgb(255, 255, 255);
+  --ship-color: rgb(255, 255, 255);
+}
+
 body {
   font-family: system-ui, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .row {
@@ -10,7 +26,7 @@ body {
   margin: 2px;
   height: 30px;
   width: 30px;
-  border: 2px solid black;
+  border: 2px solid var(--border-color);
 
   transition: 0.3s;
 }
@@ -32,11 +48,11 @@ body {
 }
 
 .ship {
-  background-color: grey;
+  background-color: var(--ship-color);
 }
 
 .hit {
-  background-color: grey;
+  background-color: var(--ship-color);
   position: relative;
 }
 
@@ -76,5 +92,5 @@ body {
   height: 10px;
   width: 10px;
   border-radius: 50%;
-  background-color: grey;
+  background-color: var(--ship-color);
 }
