@@ -1,9 +1,11 @@
 import { Ship } from './ship.js';
 
 class Cell {
-  constructor() {
+  constructor(x, y) {
     this.status = 'empty';
     this.ship = null;
+    this.x = x;
+    this.y = y;
   }
 
   placeShip(ship) {
@@ -23,7 +25,7 @@ export class Gameboard {
     for (let r = 0; r < h; r += 1) {
       this.#coordinates[r] = [];
       for (let c = 0; c < w; c += 1) {
-        this.#coordinates[r][c] = new Cell();
+        this.#coordinates[r][c] = new Cell(c, r);
       }
     }
   }
@@ -153,5 +155,16 @@ export class Gameboard {
 
   getBoardDimensions() {
     return { w: this.#coordinates[0].length, h: this.#coordinates.length };
+  }
+
+  getShootableCells() {
+    return this.#coordinates
+      .flat()
+      .filter(
+        (cell) =>
+          cell.status !== 'hit' &&
+          cell.status !== 'missed' &&
+          cell.status !== 'destroyed',
+      );
   }
 }

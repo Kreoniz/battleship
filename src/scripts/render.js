@@ -104,13 +104,26 @@ export class BoardRenderer {
   }
 
   makeOpponentMove(attacker, defender) {
-    const randomMove = attacker.makeRandomMove();
-    const x = randomMove.x;
-    const y = randomMove.y;
+    let randomMove = defender.shootRandomCell();
+    let x = randomMove.x;
+    let y = randomMove.y;
 
     const attackResult = defender.gameboard.receiveAttack(x, y);
+    console.log(attackResult, x, y);
+
     if (attackResult === 'hit') {
-      this.randomMove(attacker, defender);
+      this.makeOpponentMove(attacker, defender);
+    } else if (attackResult === 'destroyed') {
+      const adjacentCells = defender.gameboard.getShipAdjacentCells(x, y);
+
+      for (let i = 0; i < adjacentCells.length; i += 1) {
+        const adjacentX = adjacentCells[i].x;
+        const adjacentY = adjacentCells[i].y;
+
+        defender.gameboard.receiveAttack(adjacentX, adjacentY);
+      }
+
+      this.makeOpponentMove(attacker, defender);
     } else if (attackResult === 'missed') {
       this.isPlayerTurn = !this.isPlayerTurn;
     }

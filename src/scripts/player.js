@@ -5,12 +5,12 @@ export class Player {
     this.gameboard = new Gameboard();
   }
 
-  makeRandomMove() {
-    const w = this.gameboard.getBoardDimensions().w;
-    const h = this.gameboard.getBoardDimensions().h;
+  shootRandomCell() {
+    const shootableCells = this.gameboard.getShootableCells();
 
-    const x = Math.floor(Math.random() * w);
-    const y = Math.floor(Math.random() * h);
+    const randomIndex = Math.floor(Math.random() * shootableCells.length);
+    const { x, y } = shootableCells[randomIndex];
+
     return { x, y };
   }
 }

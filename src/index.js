@@ -102,4 +102,4 @@ if (!boardRenderer.isPlayerTurn) {
   boardRenderer.makeOpponentMove(opponent, player);
 }
 
-console.log(player.makeRandomMove());
+console.log(player.shootRandomCell());
