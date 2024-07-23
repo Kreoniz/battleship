@@ -117,7 +117,7 @@ export class BoardRenderer {
     const attackResult = defender.gameboard.receiveAttack(x, y);
 
     if (attackResult === 'hit') {
-      this.makeOpponentMove(attacker, defender);
+      this.isPlayerTurn = false;
     } else if (attackResult === 'destroyed') {
       const adjacentCells = defender.gameboard.getShipAdjacentCells(x, y);
 
@@ -128,15 +128,19 @@ export class BoardRenderer {
         defender.gameboard.receiveAttack(adjacentX, adjacentY);
       }
 
-      this.makeOpponentMove(attacker, defender);
+      this.isPlayerTurn = false;
     } else if (attackResult === 'missed') {
-      this.isPlayerTurn = !this.isPlayerTurn;
+      this.isPlayerTurn = true;
     }
 
     if (defender.gameboard.checkAllShipsSunk()) {
-      this.isPlayerTurn = false;
+      this.isPlayerTurn = true;
       document.querySelector('#status').textContent = 'OPPONENT WINS!';
       this.renderOpponentBoard();
+    }
+
+    if (!this.isPlayerTurn) {
+      this.makeOpponentMove(attacker, defender);
     }
 
     this.renderBoards();

@@ -94,12 +94,9 @@ const boardRenderer = new BoardRenderer(
   opponent,
 );
 
-console.log('Is player turn?', boardRenderer.isPlayerTurn);
 boardRenderer.renderPlayerBoard();
 boardRenderer.renderOpponentBoard();
 
 if (!boardRenderer.isPlayerTurn) {
   boardRenderer.makeOpponentMove(opponent, player);
 }
-
-console.log(player.shootRandomCell());
