@@ -3,6 +3,7 @@
   --text-color: grey;
   --border-color: grey;
   --ship-color: grey;
+  --missile-color: #030104;
 }
 
 .dark {
@@ -10,6 +11,7 @@
   --text-color: rgb(255, 255, 255);
   --border-color: rgb(255, 255, 255);
   --ship-color: rgb(255, 255, 255);
+  --missile-color: yellow;
 }
 
 body {
@@ -93,4 +95,8 @@ body {
   width: 10px;
   border-radius: 50%;
   background-color: var(--ship-color);
+}
+
+.missile {
+  fill: var(--missile-color);
 }

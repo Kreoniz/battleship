@@ -175,6 +175,7 @@ export class BoardRenderer {
 
     const svg = document.createElement('div');
     svg.innerHTML = MissileIcon;
+    svg.classList.add('missile');
     svg.style.position = 'absolute';
     svg.style.top = `-${cellDiv.getBoundingClientRect().height}px`;
     svg.style.left = `${cellDiv.getBoundingClientRect().left + 5}px`;
