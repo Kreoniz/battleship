@@ -83,7 +83,7 @@ for (let i = 0; i < opponentShips.length; i += 1) {
   opponent.gameboard.placeShip(opponentShips[i]);
 }
 
-// Randomly deside which player moves first
+// Randomly decide which player moves first
 const PlayerFirstTurn = Boolean(Math.round(Math.random()));
 
 const boardRenderer = new BoardRenderer(
