@@ -89,18 +89,20 @@ export class BoardRenderer {
               }
 
               if (attackResult === 'missed') {
-                this.isPlayerTurn = !this.isPlayerTurn;
-                this.renderOpponentBoard();
+                this.isPlayerTurn = false;
                 this.makeOpponentMove(this.opponent, this.player);
-              } else {
-                this.renderOpponentBoard();
+              } else if (
+                attackResult === 'hit' ||
+                attackResult === 'destroyed'
+              ) {
+                this.isPlayerTurn = true;
               }
 
               if (this.opponent.gameboard.checkAllShipsSunk()) {
-                this.isPlayerTurn = false;
                 document.querySelector('#status').textContent = 'YOU WIN!';
-                this.renderOpponentBoard();
               }
+
+              this.renderOpponentBoard();
             }, this.animationDuration);
           });
         }
@@ -166,12 +168,12 @@ export class BoardRenderer {
       { top: `${cellDiv.getBoundingClientRect().top + 5}px` },
     ];
 
+    this.isPlayerTurn = false;
+
     const missileTiming = {
       duration: this.animationDuration,
       iterations: 1,
     };
-
-    cellDiv.style.borderColor = 'red';
 
     const svg = document.createElement('div');
     svg.innerHTML = MissileIcon;
@@ -184,7 +186,11 @@ export class BoardRenderer {
     svg.animate(missileFalling, missileTiming);
     document.body.appendChild(svg);
 
+    this.renderBoards();
+    cellDiv.classList.add('target');
+
     setTimeout(() => {
+      cellDiv.classList.remove('target');
       svg.remove();
     }, this.animationDuration);
   }
