@@ -5,83 +5,10 @@ import './styles/styles.css';
 const player = new Player();
 const opponent = new Player();
 
-const playerShips = [
-  [{ x: 9, y: 0 }],
-  [{ x: 0, y: 9 }],
-  [{ x: 3, y: 6 }],
-  [{ x: 5, y: 8 }],
-  [
-    { x: 6, y: 4 },
-    { x: 7, y: 4 },
-  ],
-  [
-    { x: 5, y: 2 },
-    { x: 5, y: 1 },
-  ],
-  [
-    { x: 0, y: 6 },
-    { x: 0, y: 7 },
-  ],
-  [
-    { x: 9, y: 9 },
-    { x: 8, y: 9 },
-    { x: 7, y: 9 },
-  ],
-  [
-    { x: 9, y: 5 },
-    { x: 9, y: 6 },
-    { x: 9, y: 7 },
-  ],
-  [
-    { x: 1, y: 1 },
-    { x: 1, y: 2 },
-    { x: 1, y: 3 },
-    { x: 1, y: 4 },
-  ],
-];
+const shipSizes = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
 
-for (let i = 0; i < playerShips.length; i += 1) {
-  player.gameboard.placeShip(playerShips[i]);
-}
-
-const opponentShips = [
-  [{ x: 3, y: 0 }],
-  [{ x: 4, y: 4 }],
-  [{ x: 2, y: 9 }],
-  [{ x: 5, y: 8 }],
-  [
-    { x: 4, y: 2 },
-    { x: 5, y: 2 },
-  ],
-  [
-    { x: 7, y: 2 },
-    { x: 7, y: 1 },
-  ],
-  [
-    { x: 3, y: 6 },
-    { x: 3, y: 7 },
-  ],
-  [
-    { x: 9, y: 9 },
-    { x: 8, y: 9 },
-    { x: 7, y: 9 },
-  ],
-  [
-    { x: 9, y: 5 },
-    { x: 9, y: 6 },
-    { x: 9, y: 7 },
-  ],
-  [
-    { x: 1, y: 3 },
-    { x: 1, y: 4 },
-    { x: 1, y: 5 },
-    { x: 1, y: 6 },
-  ],
-];
-
-for (let i = 0; i < opponentShips.length; i += 1) {
-  opponent.gameboard.placeShip(opponentShips[i]);
-}
+player.gameboard.randomPlacement(shipSizes);
+opponent.gameboard.randomPlacement(shipSizes);
 
 // Randomly decide which player moves first
 const PlayerFirstTurn = Boolean(Math.round(Math.random()));

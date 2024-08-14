@@ -37,18 +37,43 @@ export class Gameboard {
   placeShip(shipCoords) {
     const ship = new Ship(shipCoords.length);
 
+    const { w, h } = this.getBoardDimensions();
+
+    if (shipCoords.some((coords) => coords.x >= w || coords.y >= h)) {
+      return false;
+    }
+
+    const adjacentCells = shipCoords
+      .map((c) => this.getShipAdjacentCells(c.x, c.y))
+      .flat();
+
+    const occupiedAdjacentCells = adjacentCells.filter(
+      (c) => this.getCell(c.x, c.y).status !== 'empty',
+    );
+
+    if (occupiedAdjacentCells.length > 0) {
+      return false;
+    }
+
+    const cells = [];
     for (let i = 0; i < shipCoords.length; i += 1) {
       const coords = shipCoords[i];
       const cell = this.#coordinates[coords.y][coords.x];
 
       if (!cell.ship) {
-        cell.ship = ship;
-        cell.status = 'occupied';
-        this.#ships.push(ship);
+        cells.push(cell);
       } else if (cell.ship) {
-        console.log("You can't place a ship where it's already placed");
+        return false;
       }
     }
+
+    for (let i = 0; i < cells.length; i += 1) {
+      const cell = cells[i];
+      cell.ship = ship;
+      cell.status = 'occupied';
+      this.#ships.push(ship);
+    }
+    return true;
   }
 
   receiveAttack(x, y) {
@@ -147,6 +172,7 @@ export class Gameboard {
 
           if (status === 'hit' || status === 'occupied') {
             queue.push(changedCoords);
+            cells.push(changedCoords);
           } else {
             cells.push(changedCoords);
           }
@@ -170,5 +196,35 @@ export class Gameboard {
           cell.status !== 'missed' &&
           cell.status !== 'destroyed',
       );
+  }
+
+  randomPlacement(shipSizes) {
+    const { w, h } = this.getBoardDimensions();
+
+    for (let i = 0; i < shipSizes.length; i += 1) {
+      let placed = false;
+
+      while (!placed) {
+        const direction = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+        const startRow = Math.floor(Math.random() * w);
+        const startCol = Math.floor(Math.random() * h);
+
+        const coords = [];
+
+        if (direction === 'horizontal') {
+          for (let x = startCol; x < startCol + shipSizes[i]; x++) {
+            coords.push({ x: x, y: startRow });
+          }
+        } else if (direction === 'vertical') {
+          for (let y = startRow; y < startRow + shipSizes[i]; y++) {
+            coords.push({ x: startCol, y: y });
+          }
+        }
+
+        if (this.placeShip(coords)) {
+          placed = true;
+        }
+      }
+    }
   }
 }
