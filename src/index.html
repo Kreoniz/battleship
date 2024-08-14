@@ -7,16 +7,25 @@
   </head>
 
   <body>
-    <div id="status"></div>
-    <div class="container">
-      <div class="board">
-        <div class="title">Your board:</div>
-        <div id="playerBoard"></div>
-      </div>
+    <button id="theme" onClick="document.body.classList.toggle('dark')">
+      Toggle theme
+    </button>
+    <div id="menu">
+      <div>Place your ships:</div>
+    </div>
 
-      <div class="board">
-        <div class="title">Opponent's board:</div>
-        <div id="opponentBoard"></div>
+    <div id="game">
+      <div id="status"></div>
+      <div class="container">
+        <div class="board">
+          <div class="title">Your board:</div>
+          <div id="playerBoard"></div>
+        </div>
+
+        <div class="board">
+          <div class="title">Opponent's board:</div>
+          <div id="opponentBoard"></div>
+        </div>
       </div>
     </div>
 
