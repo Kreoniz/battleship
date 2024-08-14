@@ -22,6 +22,11 @@ export class Gameboard {
   #coordinates = [];
 
   constructor(w = 10, h = 10) {
+    this.initializeBoard(w, h);
+  }
+
+  initializeBoard(w = 10, h = 10) {
+    this.#coordinates = [];
     for (let r = 0; r < h; r += 1) {
       this.#coordinates[r] = [];
       for (let c = 0; c < w; c += 1) {
@@ -199,6 +204,7 @@ export class Gameboard {
   }
 
   randomPlacement(shipSizes) {
+    this.initializeBoard();
     const { w, h } = this.getBoardDimensions();
 
     for (let i = 0; i < shipSizes.length; i += 1) {

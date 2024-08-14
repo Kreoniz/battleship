@@ -24,6 +24,18 @@ const boardRenderer = new BoardRenderer(
 boardRenderer.renderPlayerBoard();
 boardRenderer.renderOpponentBoard();
 
-if (!boardRenderer.isPlayerTurn) {
-  boardRenderer.makeOpponentMove(opponent, player);
-}
+const randomizeBtn = document.querySelector('#randomize');
+randomizeBtn.addEventListener('click', () => {
+  player.gameboard.randomPlacement(shipSizes);
+  boardRenderer.renderPlayerBoard();
+});
+
+const startBtn = document.querySelector('#start');
+startBtn.addEventListener('click', () => {
+  randomizeBtn.style.display = 'none';
+  startBtn.disabled = true;
+
+  if (!boardRenderer.isPlayerTurn) {
+    boardRenderer.makeOpponentMove(opponent, player);
+  }
+});
